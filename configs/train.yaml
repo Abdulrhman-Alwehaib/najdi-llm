@@ -1,0 +1,17 @@
+mix_repo: ""
+model: Qwen/Qwen3.5-9B
+model_repo: ""
+mode: auto
+lora: {r: 32, alpha: 64, dropout: 0.05}
+learning_rate: 0.0001
+warmup_frac: 0.03
+epochs: 2
+batch_size: 4
+grad_accum: 4
+max_seq_len: 2048
+eval_steps: 100
+seed: 1234
+final_eval: false
+push_merged: false
+noncommercial_data: true
+output_dir: runs/train

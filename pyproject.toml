@@ -1,0 +1,67 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "najdi"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "datasets>=3.0",
+    "huggingface_hub>=1.0",
+    "numpy>=1.26",
+    "pandas>=2.2",
+    "pyyaml>=6.0",
+    "tqdm>=4.66",
+]
+
+[project.optional-dependencies]
+generate = [
+    "vllm>=0.11",
+    "torch",
+    "transformers>=5.0",
+]
+train = [
+    "torch",
+    "transformers>=5.0",
+    "trl>=1.0",
+    "peft>=0.17",
+    "accelerate>=1.0",
+    "bitsandbytes>=0.45",
+    "safetensors",
+    "flash-linear-attention",
+]
+serve = [
+    "torch",
+    "transformers>=5.0",
+    "peft>=0.17",
+    "accelerate>=1.0",
+    "bitsandbytes>=0.45",
+    "gradio>=5.0",
+]
+mix = [
+    "transformers>=5.0",
+]
+dev = [
+    "pytest>=8",
+    "ruff>=0.6",
+]
+
+[project.scripts]
+najdi = "najdi.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]
+ignore = ["E501", "B023", "B905", "SIM108"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

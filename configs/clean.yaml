@@ -1,0 +1,30 @@
+science_repos: []
+voho_id: VohoAI/voho-saudi-dialogues
+voho_clean_repo: ""
+extra_filler_openers: []
+voho_flirt_terms:
+- يالبيه
+- يا لبيه
+- يا حبيبتي
+- حبيبتي
+- يا قلبي
+- يا عمري
+- يا روحي
+- يا بعد قلبي
+- يا بعد عمري
+- يا بعدي
+- يا عيوني
+- فديتك
+- فديت عينك
+- فديت قلبك
+- يا القمر
+- يا قمر
+- يا عسل
+- يا حلو
+- يا حلوة
+- يا جميل
+- يا جميلة
+- يا الغلا
+push: true
+seed: 1234
+output_dir: runs/clean

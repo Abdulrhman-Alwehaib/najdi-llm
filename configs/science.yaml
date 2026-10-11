@@ -1,0 +1,125 @@
+engine:
+  model: cyankiwi/Qwen3.8-27B-AWQ-INT4
+  max_model_len: 8192
+  gpu_memory_utilization: 0.85
+  max_num_batched_tokens: 4096
+  max_num_seqs: 64
+  kv_cache_dtype: auto
+thinking: low
+thinking_extra_tokens: 2000
+sampling: {temperature: 0.7, top_p: 0.8, top_k: 20, presence_penalty: 0.0, max_tokens: 3000}
+verify_sampling: {temperature: 0.6, top_p: 0.95, top_k: 20, max_tokens: 6000}
+pilot: true
+pilot_rows: 100
+target_rows: 4000
+science_frac: 0.6
+batch_tasks: 160
+push_every: 500
+telegram_every: 100
+seed: 1234
+id_prefix: sci
+repo_id: ""
+voho_id: VohoAI/voho-saudi-dialogues
+output_dir: runs/science
+wiki:
+  dataset: wikimedia/wikipedia
+  subset: 20231101.ar
+  passage_words: [120, 380]
+  min_keyword_hits: 3
+  label_chunk: 1500
+  max_candidates: null
+filters:
+  assist_words: [30, 230]
+  user_words: [2, 80]
+  min_saudi_per_100w: 8.0
+  min_saudi_per_reply: 1
+  max_fusha_ratio: 0.2
+  max_english_run: 4
+  dialect_classifier: IbrahimAmin/marbertv2-arabic-written-dialect-classifier
+  dedup_jaccard: 0.6
+  check_answer_in_reply: true
+domain:
+  name: science
+  title: Najdi Saudi science and math conversations
+  description: A user asks about science, math or logic, and the assistant explains clearly in Najdi dialect.
+  tags: [science, math]
+  topics:
+    physics: الفيزياء
+    chemistry: الكيمياء
+    biology: الأحياء
+    human_body: جسم الإنسان
+    space: الفضاء والفلك
+    earth_weather: الأرض والطقس
+    technology: التقنية وكيف تشتغل الأشياء
+    everyday_science: العلوم في حياتنا اليومية
+  keywords:
+    physics: >-
+      فيزياء فيزيائي فيزيائية طاقة سرعة تسارع جاذبية ثقالة حرارة حراري حرارية الضوء ضوئي ضوئية سرعة_الضوء الصوت
+      صوتية موجات كهرباء كهربائي كهربائية مغناطيس مغناطيسي مغناطيسية ذرات إلكترون إلكترونات بروتون نيوترون نووي
+      نووية إشعاع احتكاك عدسة انكسار ليزر ميكانيكا قصور_ذاتي طفو رنين بلازما فوتون جسيم جسيمات مجال_مغناطيسي مجال_كهربائي
+      تيار_كهربائي فولت واط جول
+    chemistry: >-
+      كيمياء كيميائي كيميائية عنصر_كيميائي عناصر_كيميائية مركب_كيميائي مركبات_كيميائية مركبات_عضوية جزيء جزيئات
+      تفاعل_كيميائي تفاعلات_كيميائية حمض أحماض قلوي ملح أملاح أكسدة محلول مذيب ذوبان تبلور بلورة بلورات فلز فلزات
+      لافلز غازات بوليمر بوليمرات بلاستيك أيون أيونات تساهمية الجدول_الدوري هيدروجين أكسجين كربون نيتروجين صوديوم
+      كلور حديد نحاس ألومنيوم حفاز تخمر احتراق تآكل صدأ تقطير نظائر كحول هيدروكربون هيدروكربونات
+    biology: >-
+      علم_الأحياء خلية خلايا كائن_حي كائنات_حية نبات نباتات حيوان حيوانات بكتيريا جرثومة جراثيم فيروس فيروسات فطريات
+      طحالب تمثيل_ضوئي بناء_ضوئي الانتقاء_الطبيعي وراثة وراثي جين جينات حمض_نووي كروموسوم كروموسومات صبغي تكاثر
+      نظام_بيئي بيئي سلسلة_غذائية حشرة حشرات ثدييات ثديي زواحف طيور أسماك برمائيات إنزيم إنزيمات بروتين بروتينات
+      أيض استقلاب تنفس_خلوي ميتوكوندريا يخضور كلوروفيل بذور بذرة تلقيح أزهار انقراض تكيف مفترس فريسة ميكروبات
+    human_body: >-
+      جسم_الإنسان القلب الدم شرايين شريان أوردة وريد رئة رئتين رئتان دماغ المخ أعصاب عصب عصبي الجهاز_العصبي هضم
+      هضمي المعدة أمعاء كبد كلى عظام عظم هيكل_عظمي عضلات عضلة جلد مناعة مناعي مناعية هرمون هرمونات غدة غدد إنسولين
+      فيتامين فيتامينات تغذية نوم شبكية أسنان تنفس دورة_دموية ضغط_الدم كوليسترول حساسية التهاب حمى لقاح لقاحات مضاد_حيوي
+      أنسجة نسيج دهون كريات حواس مرض أمراض عدوى
+    space: >-
+      فضاء الكون فلك فلكي فلكية كوكب كواكب مجرة مجرات الشمس شمسي شمسية قمر أقمار المريخ كوكب_المشتري زحل كوكب_الزهرة
+      عطارد أورانوس نبتون مذنبات نيزك نيازك كويكب كويكبات ثقب_أسود سديم الانفجار_العظيم كسوف خسوف سنة_ضوئية تلسكوب
+      مقراب رائد_فضاء محطة_الفضاء قمر_صناعي أقمار_صناعية مستعر_أعظم نجم_نيوتروني المادة_المظلمة الطاقة_المظلمة جاذبية
+    earth_weather: >-
+      جيولوجيا جيولوجي زلزال زلازل بركان براكين بركاني صخور صخر صخرية معادن تربة تعرية صفائح_تكتونية قشرة_أرضية
+      طقس مناخ مناخي أمطار مطر سحاب غيوم رياح عواصف إعصار أعاصير رطوبة ضغط_جوي غلاف_جوي احتباس_حراري الاحترار_العالمي
+      تغير_المناخ كثبان مد_وجزر محيطات مياه_جوفية دورة_الماء تبخر تكاثف برق رعد غبار عاصفة_رملية ضباب ثلج ثلوج جليد
+      أنهار_جليدية قوس_قزح طبقة_الأوزون أرصاد_جوية
+    technology: >-
+      حاسوب حاسب حواسيب كمبيوتر إنترنت شبكة_حاسوب برمجة برمجيات خوارزمية خوارزميات معالج_دقيق ترانزستور نظام_تشغيل
+      قرص_صلب دائرة_كهربائية ألياف_ضوئية هاتف_محمول هاتف_ذكي هواتف_ذكية بطارية بطاريات محرك محركات محرك_كهربائي
+      مولد_كهربائي توربين طاقة_شمسية خلايا_شمسية طاقة_الرياح ذكاء_اصطناعي روبوت إنسان_آلي شاشة_لمس تحديد_المواقع
+      بلوتوث أشباه_موصلات تبريد مكيف ثلاجة ميكروويف طباعة_ثلاثية كاميرا مستشعر تشفير
+    everyday_science: >-
+      طبخ طهي غليان تجمد تجميد صابون منظفات منظف ملح_الطعام سكر خبز خميرة حليب قهوة شاي تحلية فلتر تعرق رائحة روائح
+      عطر عطور صبغة صبغات تعفن عفن تعقيم مطهر نظافة معجون_أسنان واقي_الشمس مرآة فقاعة فقاعات سراب كهرباء_ساكنة قدر_الضغط
+      غذاء أغذية حفظ_الطعام بسترة
+  label_prompt: |-
+    Classify this Arabic Wikipedia passage for a dataset of science explanations for curious non-experts.
+
+    Title: {title}
+    Passage:
+    {passage}
+
+    Labels: physics, chemistry, biology, human_body, space, earth_weather, technology, everyday_science, none.
+    - human_body: how the human body works, in health and illness (organs, body systems, senses, diseases).
+    - technology: how machines, devices, computers and engineered things work.
+    - everyday_science: the science behind daily life (cooking, cleaning, materials at home, common phenomena).
+    - none: anything that is not mainly explaining a scientific concept, phenomenon or how something works. That includes biographies, places, organizations, events, history, politics, religion, sports, arts, lists, and narrow entries that only name or classify one thing (an obscure species, gene, asteroid, compound or product).
+    - Also none: anything about sex, sexuality, or sexual and reproductive health.
+    Answer with one label.
+  examples:
+  - user: وش الفرق بين الطقس والمناخ؟ دايم أخربط بينهم
+    assistant: >-
+      سؤال حلو، وترى كثير ناس يخربطون بينهم. الطقس هو حال الجو الحين أو هالأسبوع: حر ولا برد، فيه مطر ولا غبار.
+      والمناخ هو الجو اللي يتكرر في المكان على مدى سنين طويلة. يعني لو قلت إن بكرة بيجي غبار على الرياض، هذا طقس.
+      بس لو قلت إن صيف الرياض حار وناشف، هذا مناخ. خلها في بالك كذا: الطقس مزاج الجو اليوم، والمناخ طبعه على طول.
+  - user: ليش النبتة تحتاج شمس؟ أمي تقول لا تحطها داخل البيت
+    assistant: >-
+      أمك معها حق. النبتة تسوي أكلها بنفسها، والشمس هي اللي تعطيها الطاقة عشان تسويه. الورقة تاخذ ضوء الشمس، وتسحب
+      الماء من التربة، وثاني أكسيد الكربون من الهوا، وتطلع منها سكر تتغذى عليه، والأكسجين اللي نتنفسه يطلع منها
+      بعد. هالعملية اسمها التمثيل الضوئي. فلو حطيتها في مكان ما يوصله ضوء فترة طويلة، ما تقدر تسوي أكلها وتبدأ تذبل
+      شوي شوي.
+  - user: ليش الحديد إذا لمسته أبرد من الخشب، وهم في نفس الغرفة؟
+    assistant: >-
+      ترى الاثنين حرارتهم نفس الشي، الفرق في يدك أنت. الحديد ينقل الحرارة بسرعة، فإذا لمسته يسحب الحرارة من يدك
+      بسرعة وتحس إنه بارد. والخشب بالعكس، ينقل الحرارة ببطء، فيدك ما تفقد حرارة كثير وتحسه عادي. يعني الإحساس بالبرودة
+      مو معناه إن الشي بارد، معناه إن حرارة يدك قاعدة تروح له بسرعة.
+  extra_rules: ''

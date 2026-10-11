@@ -1,0 +1,89 @@
+x-job: &job
+  env_file:
+    - path: .env
+      required: false
+  volumes:
+    - ./configs:/app/configs:ro
+    - ./runs:/app/runs
+    - hf-cache:/cache/huggingface
+  ipc: host
+  profiles: [jobs]
+
+x-gpu: &gpu
+  deploy:
+    resources:
+      reservations:
+        devices:
+          - driver: nvidia
+            count: all
+            capabilities: [gpu]
+
+x-generate: &generate
+  build:
+    context: .
+    dockerfile: docker/Dockerfile
+    target: generate
+  image: najdi-llm:generate
+
+x-train: &train
+  build:
+    context: .
+    dockerfile: docker/Dockerfile
+    target: train
+  image: najdi-llm:train
+
+x-cpu: &cpu
+  build:
+    context: .
+    dockerfile: docker/Dockerfile
+    target: cpu
+  image: najdi-llm:cpu
+
+services:
+  science:
+    <<: [*job, *gpu, *generate]
+    command: ["science", "--config", "configs/science.yaml"]
+
+  medical:
+    <<: [*job, *gpu, *generate]
+    command: ["science", "--config", "configs/medical.yaml"]
+
+  chat-data:
+    <<: [*job, *gpu, *generate]
+    command: ["chat-data", "--config", "configs/chat-data.yaml"]
+
+  clean:
+    <<: [*job, *cpu]
+    command: ["clean", "--config", "configs/clean.yaml"]
+
+  mix:
+    <<: [*job, *cpu]
+    command: ["mix", "--config", "configs/mix.yaml"]
+
+  compare:
+    <<: [*job, *gpu, *train]
+    command: ["compare", "--config", "configs/compare.yaml"]
+
+  train:
+    <<: [*job, *gpu, *train]
+    command: ["train", "--config", "configs/train.yaml"]
+
+  serve:
+    <<: [*gpu]
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: serve
+    image: najdi-llm:serve
+    env_file:
+      - path: .env
+        required: false
+    volumes:
+      - ./configs:/app/configs:ro
+      - hf-cache:/cache/huggingface
+    ports:
+      - "7860:7860"
+    command: ["serve", "--config", "configs/serve.yaml"]
+
+volumes:
+  hf-cache:

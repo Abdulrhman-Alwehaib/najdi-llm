@@ -1,0 +1,19 @@
+mix_repo: ""
+candidates:
+- family: Qwen3.5-9B
+  model: Qwen/Qwen3.5-9B
+  license: Apache 2.0
+- family: Gemma 4 E4B
+  model: google/gemma-4-E4B-it
+  license: Apache 2.0
+- family: Ministral 3 8B
+  model: mistralai/Ministral-3-8B-Instruct-2512-BF16
+  license: Apache 2.0
+- family: Fanar-1-9B
+  model: QCRI/Fanar-1-9B-Instruct
+  license: Apache 2.0
+max_seq_len: 2048
+memory_test_batch: 4
+lora_r: 32
+delete_after: true
+output_dir: runs/compare

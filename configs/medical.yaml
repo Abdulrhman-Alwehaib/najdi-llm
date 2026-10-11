@@ -1,0 +1,96 @@
+engine:
+  model: cyankiwi/Qwen3.8-27B-AWQ-INT4
+  max_model_len: 8192
+  gpu_memory_utilization: 0.85
+  max_num_batched_tokens: 4096
+  max_num_seqs: 64
+  kv_cache_dtype: auto
+thinking: low
+thinking_extra_tokens: 2000
+sampling: {temperature: 0.7, top_p: 0.8, top_k: 20, presence_penalty: 0.0, max_tokens: 3000}
+verify_sampling: {temperature: 0.6, top_p: 0.95, top_k: 20, max_tokens: 6000}
+pilot: true
+pilot_rows: 20
+target_rows: 50
+science_frac: 1.0
+batch_tasks: 60
+push_every: 500
+telegram_every: 100
+seed: 1234
+id_prefix: med
+repo_id: ""
+voho_id: VohoAI/voho-saudi-dialogues
+output_dir: runs/medical
+wiki:
+  dataset: wikimedia/wikipedia
+  subset: 20231101.ar
+  passage_words: [120, 380]
+  min_keyword_hits: 3
+  label_chunk: 300
+  max_candidates: 1500
+filters:
+  assist_words: [30, 230]
+  user_words: [2, 80]
+  min_saudi_per_100w: 8.0
+  min_saudi_per_reply: 1
+  max_fusha_ratio: 0.2
+  max_english_run: 4
+  dialect_classifier: IbrahimAmin/marbertv2-arabic-written-dialect-classifier
+  dedup_jaccard: 0.6
+  check_answer_in_reply: true
+domain:
+  name: medical
+  title: Najdi Saudi medical conversations
+  description: A user asks about a medical or health topic, and the assistant explains it clearly in Najdi dialect.
+  tags: [medical, health]
+  topics:
+    medical: الطب والصحة
+  keywords:
+    medical: >-
+      مرض أمراض مرضي مرضية داء متلازمة عدوى معدي معدية فيروس فيروسات بكتيريا جرثومة جراثيم التهاب التهابات حمى أعراض
+      تشخيص علاج علاجات علاجي دواء أدوية عقار عقاقير لقاح لقاحات تطعيم مناعة مناعي مناعية جهاز_المناعة مضاد_حيوي
+      مضادات_حيوية سرطان ورم أورام سكري ضغط_الدم كوليسترول إنسولين ربو حساسية جلطة سكتة_دماغية زهايمر صداع إسهال
+      سعال طب طبي طبية صحة_الإنسان الصحة_العامة جراحة جراحي جراحية إسعافات_أولية تغذية فيتامين فيتامينات وباء أوبئة
+      جائحة صيدلة جرعة مسكن مسكنات تسمم قلب الكلى الكبد الرئتين
+  label_prompt: |-
+    Classify this Arabic Wikipedia passage for a dataset of medical and health explanations for curious non-experts.
+
+    Title: {title}
+    Passage:
+    {passage}
+
+    Labels: medical, none.
+    - medical: mainly explains a disease or medical condition (causes, symptoms, diagnosis, treatment, prevention), how medicines, vaccines or the immune system work, or a health topic such as nutrition, first aid, hygiene or public health.
+    - none: anything else. That includes biographies (doctors too), hospitals, organizations, places, events, history, lists, and narrow entries that only name or classify one thing (an obscure drug, gene, compound or species).
+    - Also none: anything about sex, sexuality, or sexual and reproductive health.
+    Answer with one label.
+  examples:
+  - user: ليش ترتفع حرارتنا لما نمرض؟ أمي دايم تخاف إذا أخوي الصغير سخن
+    assistant: >-
+      ترى الحرارة مو هي المرض نفسه، هي طريقة جسمك يدافع فيها. لما يدخل الجسم فيروس أو جرثومة، جهاز المناعة يرسل
+      إشارة للمخ، والمخ يرفع حرارة الجسم شوي. هالارتفاع يخلي الجو داخل الجسم مو مريح للجراثيم، ويساعد خلايا المناعة
+      تشتغل أسرع. عشان كذا الحمى الخفيفة غالبًا مو شي يخوف، بس إذا طالت أو صارت عالية مرة، لازم تودونه للطبيب.
+  - user: وش الفرق بين الفيروس والبكتيريا؟ وليش المضاد الحيوي ما ينفع مع الزكام؟
+    assistant: >-
+      سؤال زين. البكتيريا كائنات حية صغيرة مرة، تعيش وتتكاثر بنفسها. والفيروس أصغر منها بكثير، وما يقدر يتكاثر إلا
+      إذا دخل خلية من خلايا جسمك. المضاد الحيوي شغله يضرب أشياء موجودة في البكتيريا بس، عشان كذا ما يأثر على الفيروس
+      أبد. والزكام سببه فيروس، يعني المضاد الحيوي ما بيفيدك فيه. وترى لو أخذته بدون داعي، البكتيريا ممكن تتعود عليه
+      وما يعود ينفع معك بعدين.
+  - user: وش الفرق بين الطقس والمناخ؟ دايم أخربط بينهم
+    assistant: >-
+      سؤال حلو، وترى كثير ناس يخربطون بينهم. الطقس هو حال الجو الحين أو هالأسبوع: حر ولا برد، فيه مطر ولا غبار.
+      والمناخ هو الجو اللي يتكرر في المكان على مدى سنين طويلة. يعني لو قلت إن بكرة بيجي غبار على الرياض، هذا طقس.
+      بس لو قلت إن صيف الرياض حار وناشف، هذا مناخ. خلها في بالك كذا: الطقس مزاج الجو اليوم، والمناخ طبعه على طول.
+  - user: ليش النبتة تحتاج شمس؟ أمي تقول لا تحطها داخل البيت
+    assistant: >-
+      أمك معها حق. النبتة تسوي أكلها بنفسها، والشمس هي اللي تعطيها الطاقة عشان تسويه. الورقة تاخذ ضوء الشمس، وتسحب
+      الماء من التربة، وثاني أكسيد الكربون من الهوا، وتطلع منها سكر تتغذى عليه، والأكسجين اللي نتنفسه يطلع منها
+      بعد. هالعملية اسمها التمثيل الضوئي. فلو حطيتها في مكان ما يوصله ضوء فترة طويلة، ما تقدر تسوي أكلها وتبدأ تذبل
+      شوي شوي.
+  - user: ليش الحديد إذا لمسته أبرد من الخشب، وهم في نفس الغرفة؟
+    assistant: >-
+      ترى الاثنين حرارتهم نفس الشي، الفرق في يدك أنت. الحديد ينقل الحرارة بسرعة، فإذا لمسته يسحب الحرارة من يدك
+      بسرعة وتحس إنه بارد. والخشب بالعكس، ينقل الحرارة ببطء، فيدك ما تفقد حرارة كثير وتحسه عادي. يعني الإحساس بالبرودة
+      مو معناه إن الشي بارد، معناه إن حرارة يدك قاعدة تروح له بسرعة.
+  extra_rules: |
+    - المساعد يشرح معلومة عامة بس: ما يشخّص حالة أحد ولا يحدد جرعات دوا. وإذا السائل تكلم عن حالته أو حالة أحد يعرفه، ينصحه يراجع الطبيب.
